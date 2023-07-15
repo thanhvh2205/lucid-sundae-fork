@@ -631,12 +631,15 @@ export class Emulator implements Provider {
         rewardAddress,
       );
       checkAndConsumeHash(stakeCredential!, "Reward", index);
-      if (this.chain[rewardAddress]?.delegation.rewards !== withdrawal) {
+      const balance = this.chain[rewardAddress]?.delegation.rewards;
+      if (balance && balance !== withdrawal) {
         throw new Error(
           "Withdrawal amount doesn't match actual reward balance.",
         );
       }
-      withdrawalRequests.push({ rewardAddress, withdrawal });
+      if (balance) {
+        withdrawalRequests.push({ rewardAddress, withdrawal });
+      }
     }
 
     // Check cert witnesses
