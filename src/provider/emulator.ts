@@ -782,12 +782,16 @@ export class Emulator implements Provider {
       );
     }
 
+    // This logic doesn't account for reference inputs, which you should be
+    // allowed to witness without consuming.
+    /*
     const [extraDatumHash] = Object.keys(datumTable).filter((datumHash) =>
       !consumedHashes.has(datumHash)
     );
     if (extraDatumHash) {
       throw new Error(`Extraneous plutus data. Datum hash: ${extraDatumHash}`);
     }
+    */
 
     // Apply transitions
 
