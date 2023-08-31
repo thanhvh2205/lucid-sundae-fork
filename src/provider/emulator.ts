@@ -26,6 +26,7 @@ import {
   fromHex,
   getAddressDetails,
   toHex,
+  applyDoubleCborEncoding,
 } from "../utils/utils.ts";
 
 /** Concatentation of txHash + outputIndex */
@@ -464,27 +465,30 @@ export class Emulator implements Provider {
       }
 
       const scriptRef = entry.utxo.scriptRef;
+      console.log(scriptRef);
       if (scriptRef) {
         switch (scriptRef.type) {
           case "Native": {
-            const script = C.NativeScript.from_bytes(fromHex(scriptRef.script));
+            const script = C.NativeScript.from_bytes(fromHex(applyDoubleCborEncoding(scriptRef.script)));
             nativeHashesOptional[
               script.hash(C.ScriptHashNamespace.NativeScript).to_hex()
             ] = script;
             break;
           }
           case "PlutusV1": {
-            const script = C.PlutusScript.from_bytes(fromHex(scriptRef.script));
-            plutusHashesOptional.push(
-              script.hash(C.ScriptHashNamespace.PlutusV1).to_hex(),
-            );
+            console.log("PlutusV1 script of length: " + fromHex(scriptRef.script).length);
+            const script = C.PlutusScript.from_bytes(fromHex(applyDoubleCborEncoding(scriptRef.script)));
+            let it = script.hash(C.ScriptHashNamespace.PlutusV1).to_hex();
+            console.log("pushing optional V1 hash from reference: " + it);
+            plutusHashesOptional.push(it);
             break;
           }
           case "PlutusV2": {
-            const script = C.PlutusScript.from_bytes(fromHex(scriptRef.script));
-            plutusHashesOptional.push(
-              script.hash(C.ScriptHashNamespace.PlutusV2).to_hex(),
-            );
+            console.log("PlutusV2 script of length: " + fromHex(scriptRef.script).length);
+            const script = C.PlutusScript.from_bytes(fromHex(applyDoubleCborEncoding(scriptRef.script)));
+            let it = script.hash(C.ScriptHashNamespace.PlutusV2).to_hex();
+            console.log("pushing optional V2 hash from reference: " + it);
+            plutusHashesOptional.push(it);
             break;
           }
         }
