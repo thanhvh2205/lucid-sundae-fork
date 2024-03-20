@@ -465,7 +465,6 @@ export class Emulator implements Provider {
       }
 
       const scriptRef = entry.utxo.scriptRef;
-      console.log(scriptRef);
       if (scriptRef) {
         switch (scriptRef.type) {
           case "Native": {
