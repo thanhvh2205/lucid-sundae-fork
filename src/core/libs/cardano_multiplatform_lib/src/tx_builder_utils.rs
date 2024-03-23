@@ -123,14 +123,26 @@ pub fn get_ex_units(
         false,
         |_| (),
     );
-
     match result {
-        Ok(redeemers_bytes) => Ok(Redeemers(
-            redeemers_bytes
-                .iter()
-                .map(|r| Redeemer::from_bytes(r.to_vec()).unwrap())
-                .collect(),
-        )),
+        Ok(redeemers_bytes) => {
+            Ok(Redeemers(
+                redeemers_bytes
+                    .iter()
+                    .map(|r| {
+                        let estimatedRedeemer = Redeemer::from_bytes(r.to_vec()).unwrap();
+                        Redeemer::new(
+                            &estimatedRedeemer.tag(),
+                            &estimatedRedeemer.index(),
+                            &estimatedRedeemer.data(),
+                            &ExUnits::new(
+                                &estimatedRedeemer.ex_units().mem().checked_mul(&BigNum::from_str("6").unwrap()).unwrap().checked_div(&BigNum::from_str("5").unwrap()).unwrap(),
+                                &estimatedRedeemer.ex_units().steps().checked_mul(&BigNum::from_str("6").unwrap()).unwrap().checked_div(&BigNum::from_str("5").unwrap()).unwrap(),
+                            ),
+                        )
+                    })
+                    .collect(),
+            ))
+        },
         Err(err) => Err(JsError::from_str(&err.to_string())),
     }
 }

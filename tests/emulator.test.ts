@@ -216,10 +216,14 @@ Deno.test("Evaluate a contract", async () => {
 
   assertEquals(scriptUtxos.length, 1);
 
-  const _txHash =
-    await (await (await lucid.newTx().collectFrom(scriptUtxos, Data.void())
+  const txComplete =
+    (await lucid.newTx().collectFrom(scriptUtxos, Data.void())
       .attachSpendingValidator(alwaysSucceedScript)
-      .complete()).sign().complete()).submit();
+      .complete());
+
+  console.log(txComplete.exUnits);
+    
+  const _txHash = await (await (txComplete.sign().complete())).submit();
 
   emulator.awaitSlot(100);
 });
