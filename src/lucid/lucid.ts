@@ -56,7 +56,6 @@ export class Lucid {
       const protocolParameters = await provider.getProtocolParameters();
 
       if (lucid.provider instanceof Emulator) {
-        lucid.network = "Custom";
         SLOT_CONFIG_NETWORK[lucid.network] = {
           zeroTime: lucid.provider.now(),
           zeroSlot: 0,

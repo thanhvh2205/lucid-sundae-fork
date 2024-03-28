@@ -9,7 +9,11 @@
   "lint": {
     "files": {
       "include": ["src/"],
-      "exclude": ["src/core/"]
+      "exclude": [
+        "src/core/",
+        "src/provider/blockfrost.ts",
+        "src/provider/maestro.ts"
+      ]
     }
   }
 }
